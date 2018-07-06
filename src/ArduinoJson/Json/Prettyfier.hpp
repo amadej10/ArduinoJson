@@ -76,26 +76,26 @@ class Prettyfier {
   size_t writeBlockClose(char c) {
     size_t n = 0;
     n += unindentIfNeeded();
-    n += writeRaw(c);
+    n += write(c);
     return n;
   }
 
   size_t writeBlockOpen(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += writeRaw(c);
+    n += write(c);
     return n;
   }
 
   size_t writeColon() {
     size_t n = 0;
-    n += writeRaw(": ", 2);
+    n += write(": ");
     return n;
   }
 
   size_t writeComma() {
     size_t n = 0;
-    n += writeRaw(",\r\n", 3);
+    n += write(",\r\n");
     return n;
   }
 
@@ -103,14 +103,14 @@ class Prettyfier {
     _inString = true;
     size_t n = 0;
     n += indentIfNeeded();
-    n += writeRaw('"');
+    n += write('"');
     return n;
   }
 
   size_t writeNormalChar(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += writeRaw(c);
+    n += write(c);
     return n;
   }
 
@@ -118,23 +118,24 @@ class Prettyfier {
     if (!inEmptyBlock()) return 0;
 
     _sink.indent();
-    return writeRaw("\r\n", 2);
+    return write("\r\n");
   }
 
   size_t unindentIfNeeded() {
     if (inEmptyBlock()) return 0;
 
     _sink.unindent();
-    return writeRaw("\r\n", 2);
+    return write("\r\n");
   }
 
-  size_t writeRaw(char c) {
-  	return _sink.write(static_cast<uint8_t>(c));
+  size_t write(char c) {
+    return _sink.write(static_cast<uint8_t>(c));
   }
 
-  size_t writeRaw(const char* s, size_t len) {
-  	return _sink.write(reinterpret_cast<const uint8_t*>(s), len);
-  } 
+  template <size_t N>
+  size_t write(const char (&s)[N]) {
+    return _sink.write(reinterpret_cast<const uint8_t*>(s), N - 1);
+  }
 
   char _previousChar;
   IndentedPrint<Print>& _sink;
