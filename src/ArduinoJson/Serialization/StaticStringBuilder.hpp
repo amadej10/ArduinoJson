@@ -14,16 +14,19 @@ class StaticStringBuilder {
     *p = '\0';
   }
 
-  size_t print(char c) {
+  size_t write(uint8_t c) {
     if (p >= end) return 0;
     *p++ = c;
     *p = '\0';
     return 1;
   }
 
-  size_t print(const char *s) {
+  size_t write(const uint8_t *s, size_t n) {
     char *begin = p;
-    while (p < end && *s) *p++ = *s++;
+    while (p < end && n > 0) {
+      *p++ = *s++;
+      n--;
+    }
     *p = '\0';
     return size_t(p - begin);
   }

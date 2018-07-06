@@ -46,8 +46,14 @@ struct StdStringTraits {
     str += c;
   }
 
-  static void append(TString& str, const char* s) {
-    str += s;
+  static void append(TString& str, const char* s, size_t n) {
+    // CAUTION: Arduino String doesn't have append()
+    // and old version doesn't have size() either
+    str.reserve(str.length() + n);
+    while (n > 0) {
+      str += *s++;
+      n--;
+    }
   }
 
   static const bool has_append = true;

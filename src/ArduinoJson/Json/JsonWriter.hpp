@@ -5,6 +5,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <string.h>  // for strlen
 #include "../Data/JsonInteger.hpp"
 #include "../Numbers/FloatParts.hpp"
 #include "../Polyfills/attributes.hpp"
@@ -45,12 +46,15 @@ class JsonWriter {
   }
 
   void writeBoolean(bool value) {
-    writeRaw(value ? "true" : "false");
+    if (value)
+      writeRaw("true", 4);
+    else
+      writeRaw("false", 5);
   }
 
   void writeString(const char *value) {
     if (!value) {
-      writeRaw("null");
+      writeRaw("null", 4);
     } else {
       writeRaw('\"');
       while (*value) writeChar(*value++);
@@ -70,14 +74,14 @@ class JsonWriter {
 
   template <typename TFloat>
   void writeFloat(TFloat value) {
-    if (isnan(value)) return writeRaw("NaN");
+    if (isnan(value)) return writeRaw("NaN", 3);
 
     if (value < 0.0) {
       writeRaw('-');
       value = -value;
     }
 
-    if (isinf(value)) return writeRaw("Infinity");
+    if (isinf(value)) return writeRaw("Infinity", 8);
 
     FloatParts<TFloat> parts(value);
 
@@ -85,7 +89,7 @@ class JsonWriter {
     if (parts.decimalPlaces) writeDecimals(parts.decimal, parts.decimalPlaces);
 
     if (parts.exponent < 0) {
-      writeRaw("e-");
+      writeRaw("e-", 2);
       writeInteger(-parts.exponent);
     }
 
@@ -129,10 +133,13 @@ class JsonWriter {
   }
 
   void writeRaw(const char *s) {
-    _length += _sink.print(s);
+    writeRaw(s, strlen(s));
+  }
+  void writeRaw(const char *s, int n) {
+    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), n);
   }
   void writeRaw(char c) {
-    _length += _sink.print(c);
+    _length += _sink.write(c);
   }
 
  protected:

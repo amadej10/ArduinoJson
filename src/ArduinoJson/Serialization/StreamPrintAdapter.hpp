@@ -17,14 +17,14 @@ class StreamPrintAdapter {
  public:
   explicit StreamPrintAdapter(std::ostream& os) : _os(os) {}
 
-  size_t print(char c) {
+  size_t write(uint8_t c) {
     _os << c;
     return 1;
   }
 
-  size_t print(const char* s) {
-    _os << s;
-    return strlen(s);
+  size_t write(const uint8_t* s, size_t n) {
+    _os.write(reinterpret_cast<const char*>(s), n);
+    return n;
   }
 
  private:
@@ -33,7 +33,7 @@ class StreamPrintAdapter {
 
   std::ostream& _os;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson
 
 #endif  // ARDUINOJSON_ENABLE_STD_STREAM

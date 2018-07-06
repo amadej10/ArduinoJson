@@ -152,12 +152,11 @@ class MsgPackSerializer {
 
  private:
   void writeByte(uint8_t c) {
-    _output->print(char(c));
-    _bytesWritten++;
+    _bytesWritten += _output->write(char(c));
   }
 
-  void writeBytes(const uint8_t* c, size_t n) {
-    for (; n > 0; --n, ++c) writeByte(*c);
+  void writeBytes(const uint8_t* p, size_t n) {
+    _bytesWritten += _output->write(p, n);
   }
 
   template <typename T>

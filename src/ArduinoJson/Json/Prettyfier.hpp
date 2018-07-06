@@ -18,17 +18,20 @@ class Prettyfier {
     _inString = false;
   }
 
-  size_t print(char c) {
+  size_t write(char c) {
     size_t n = _inString ? handleStringChar(c) : handleMarkupChar(c);
     _previousChar = c;
     return n;
   }
 
-  size_t print(const char* s) {
+  size_t write(const uint8_t* s, size_t n) {
     // TODO: optimize
-    size_t n = 0;
-    while (*s) n += print(*s++);
-    return n;
+    size_t bytesWritten = 0;
+    while (n > 0) {
+      bytesWritten += write(*s++);
+      n--;
+    }
+    return bytesWritten;
   }
 
  private:
@@ -43,7 +46,7 @@ class Prettyfier {
 
     if (isQuote) _inString = false;
 
-    return _sink.print(c);
+    return _sink.write(c);
   }
 
   size_t handleMarkupChar(char c) {
@@ -73,26 +76,26 @@ class Prettyfier {
   size_t writeBlockClose(char c) {
     size_t n = 0;
     n += unindentIfNeeded();
-    n += _sink.print(c);
+    n += _sink.write(c);
     return n;
   }
 
   size_t writeBlockOpen(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.print(c);
+    n += _sink.write(c);
     return n;
   }
 
   size_t writeColon() {
     size_t n = 0;
-    n += _sink.print(": ");
+    n += _sink.write(": ", 2);
     return n;
   }
 
   size_t writeComma() {
     size_t n = 0;
-    n += _sink.print(",\r\n");
+    n += _sink.write(",\r\n", 3);
     return n;
   }
 
@@ -100,14 +103,14 @@ class Prettyfier {
     _inString = true;
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.print('"');
+    n += _sink.write('"');
     return n;
   }
 
   size_t writeNormalChar(char c) {
     size_t n = 0;
     n += indentIfNeeded();
-    n += _sink.print(c);
+    n += _sink.write(c);
     return n;
   }
 
@@ -115,19 +118,19 @@ class Prettyfier {
     if (!inEmptyBlock()) return 0;
 
     _sink.indent();
-    return _sink.print("\r\n");
+    return _sink.write("\r\n", 2);
   }
 
   size_t unindentIfNeeded() {
     if (inEmptyBlock()) return 0;
 
     _sink.unindent();
-    return _sink.print("\r\n");
+    return _sink.write("\r\n", 2);
   }
 
   char _previousChar;
   IndentedPrint<Print>& _sink;
   bool _inString;
 };
-}
-}
+}  // namespace Internals
+}  // namespace ArduinoJson

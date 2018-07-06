@@ -15,15 +15,14 @@ class DynamicStringBuilder {
  public:
   DynamicStringBuilder(TString &str) : _str(str) {}
 
-  size_t print(char c) {
+  size_t write(uint8_t c) {
     StringTraits<TString>::append(_str, c);
     return 1;
   }
 
-  size_t print(const char *s) {
-    size_t initialLen = _str.length();
-    StringTraits<TString>::append(_str, s);
-    return _str.length() - initialLen;
+  size_t write(const uint8_t *s, size_t n) {
+    StringTraits<TString>::append(_str, reinterpret_cast<const char *>(s), n);
+    return n;
   }
 
  private:
