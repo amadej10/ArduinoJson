@@ -11,10 +11,10 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename TPrint>
+template <typename TWriter>
 class JsonSerializer {
  public:
-  JsonSerializer(TPrint &destination) : _writer(destination) {}
+  JsonSerializer(TWriter &writer) : _writer(writer) {}
 
   void acceptFloat(JsonFloat value) {
     _writer.writeFloat(value);
@@ -85,7 +85,7 @@ class JsonSerializer {
   }
 
  private:
-  JsonWriter<TPrint> _writer;
+  JsonWriter<TWriter> _writer;
 };
 
 }  // namespace Internals

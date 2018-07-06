@@ -10,10 +10,10 @@ namespace ArduinoJson {
 namespace Internals {
 
 // Converts a compact JSON string into an indented one.
-template <typename Print>
+template <typename TWriter>
 class Prettyfier {
  public:
-  explicit Prettyfier(IndentedPrint<Print>& p) : _sink(p) {
+  explicit Prettyfier(IndentedPrint<TWriter>& p) : _sink(p) {
     _previousChar = 0;
     _inString = false;
   }
@@ -138,7 +138,7 @@ class Prettyfier {
   }
 
   char _previousChar;
-  IndentedPrint<Print>& _sink;
+  IndentedPrint<TWriter>& _sink;
   bool _inString;
 };
 }  // namespace Internals

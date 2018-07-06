@@ -14,12 +14,12 @@
 namespace ArduinoJson {
 namespace Internals {
 
-template <typename Print>
+template <typename TWriter>
 class JsonWriter {
  public:
-  explicit JsonWriter(Print &sink) : _sink(sink), _length(0) {}
+  explicit JsonWriter(TWriter &writer) : _writer(writer), _length(0) {}
 
-  // Returns the number of bytes sent to the Print implementation.
+  // Returns the number of bytes sent to the TWriter implementation.
   size_t bytesWritten() const {
     return _length;
   }
@@ -133,22 +133,22 @@ class JsonWriter {
   }
 
   void writeRaw(const char *s) {
-    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
+    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
   }
   void writeRaw(const char *begin, const char *end) {
-    _length += _sink.write(reinterpret_cast<const uint8_t *>(begin),
-                           static_cast<size_t>(end - begin));
+    _length += _writer.write(reinterpret_cast<const uint8_t *>(begin),
+                             static_cast<size_t>(end - begin));
   }
   template <size_t N>
   void writeRaw(const char (&s)[N]) {
-    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), N - 1);
+    _length += _writer.write(reinterpret_cast<const uint8_t *>(s), N - 1);
   }
   void writeRaw(char c) {
-    _length += _sink.write(static_cast<uint8_t>(c));
+    _length += _writer.write(static_cast<uint8_t>(c));
   }
 
  protected:
-  Print &_sink;
+  TWriter &_writer;
   size_t _length;
 
  private:
