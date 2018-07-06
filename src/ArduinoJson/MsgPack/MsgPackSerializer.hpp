@@ -152,7 +152,7 @@ class MsgPackSerializer {
 
  private:
   void writeByte(uint8_t c) {
-    _bytesWritten += _output->write(char(c));
+    _bytesWritten += _output->write(c);
   }
 
   void writeBytes(const uint8_t* p, size_t n) {

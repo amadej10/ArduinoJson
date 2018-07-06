@@ -112,7 +112,7 @@ class JsonWriter {
     } while (value);
 
     // and dump it in the right order
-    writeRaw(begin, end - begin);
+    writeRaw(begin, static_cast<size_t>(end - begin));
   }
 
   void writeDecimals(uint32_t value, int8_t width) {
@@ -129,17 +129,17 @@ class JsonWriter {
     *--begin = '.';
 
     // and dump it in the right order
-    writeRaw(begin, end - begin);
+    writeRaw(begin, static_cast<size_t>(end - begin));
   }
 
   void writeRaw(const char *s) {
     writeRaw(s, strlen(s));
   }
-  void writeRaw(const char *s, int n) {
+  void writeRaw(const char *s, size_t n) {
     _length += _sink.write(reinterpret_cast<const uint8_t *>(s), n);
   }
   void writeRaw(char c) {
-    _length += _sink.write(c);
+    _length += _sink.write(static_cast<uint8_t>(c));
   }
 
  protected:

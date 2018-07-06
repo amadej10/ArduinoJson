@@ -16,7 +16,7 @@ class DynamicStringBuilder {
   DynamicStringBuilder(TString &str) : _str(str) {}
 
   size_t write(uint8_t c) {
-    StringTraits<TString>::append(_str, c);
+    StringTraits<TString>::append(_str, char(c));
     return 1;
   }
 

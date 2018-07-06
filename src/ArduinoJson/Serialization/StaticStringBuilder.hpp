@@ -16,7 +16,7 @@ class StaticStringBuilder {
 
   size_t write(uint8_t c) {
     if (p >= end) return 0;
-    *p++ = c;
+    *p++ = static_cast<char>(c);
     *p = '\0';
     return 1;
   }
@@ -24,7 +24,7 @@ class StaticStringBuilder {
   size_t write(const uint8_t *s, size_t n) {
     char *begin = p;
     while (p < end && n > 0) {
-      *p++ = *s++;
+      *p++ = static_cast<char>(*s++);
       n--;
     }
     *p = '\0';

@@ -19,7 +19,7 @@ class IndentedPrint {
     isNewLine = true;
   }
 
-  size_t write(char c) {
+  size_t write(uint8_t c) {
     size_t n = 0;
     if (isNewLine) n += writeTabs();
     n += sink->write(c);
@@ -27,7 +27,7 @@ class IndentedPrint {
     return n;
   }
 
-  size_t write(const char *s, size_t n) {
+  size_t write(const uint8_t *s, size_t n) {
     // TODO: optimize
     size_t bytesWritten = 0;
     while (n > 0) {

@@ -23,7 +23,7 @@ class StreamPrintAdapter {
   }
 
   size_t write(const uint8_t* s, size_t n) {
-    _os.write(reinterpret_cast<const char*>(s), n);
+    _os.write(reinterpret_cast<const char*>(s), static_cast<std::streamsize>(n));
     return n;
   }
 
