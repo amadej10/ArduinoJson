@@ -18,9 +18,12 @@ struct JsonObjectData;
 union JsonVariantContent {
   JsonFloat asFloat;         // used for double and float
   JsonUInt asInteger;        // used for bool, char, short, int and longs
-  const char* asString;      // asString can be null
   JsonArrayData* asArray;    // asArray cannot be null
   JsonObjectData* asObject;  // asObject cannot be null
+  struct {
+    const char* data;  // asString can be null
+    size_t size;
+  } asString;
 };
 }  // namespace Internals
 }  // namespace ArduinoJson

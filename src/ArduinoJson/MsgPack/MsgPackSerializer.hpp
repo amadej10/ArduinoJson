@@ -91,8 +91,8 @@ class MsgPackSerializer {
     writeBytes(reinterpret_cast<const uint8_t*>(value), n);
   }
 
-  void acceptRawJson(const char* value) {
-    writeBytes(reinterpret_cast<const uint8_t*>(value), strlen(value));
+  void acceptRawJson(const char* data, size_t size) {
+    writeBytes(reinterpret_cast<const uint8_t*>(data), size);
   }
 
   void acceptNegativeInteger(JsonUInt value) {

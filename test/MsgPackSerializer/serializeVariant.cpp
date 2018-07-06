@@ -129,5 +129,6 @@ TEST_CASE("serialize MsgPack value") {
 
   SECTION("RawJson") {
     check(RawJson("\xDA\xFF\xFF"), "\xDA\xFF\xFF");
+    check(RawJson("\xDB\x00\x01\x00\x00", 5), "\xDB\x00\x01\x00\x00");
   }
 }
