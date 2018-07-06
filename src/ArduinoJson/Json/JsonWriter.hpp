@@ -47,14 +47,14 @@ class JsonWriter {
 
   void writeBoolean(bool value) {
     if (value)
-      writeRaw("true", 4);
+      writeRaw("true");
     else
-      writeRaw("false", 5);
+      writeRaw("false");
   }
 
   void writeString(const char *value) {
     if (!value) {
-      writeRaw("null", 4);
+      writeRaw("null");
     } else {
       writeRaw('\"');
       while (*value) writeChar(*value++);
@@ -74,14 +74,14 @@ class JsonWriter {
 
   template <typename TFloat>
   void writeFloat(TFloat value) {
-    if (isnan(value)) return writeRaw("NaN", 3);
+    if (isnan(value)) return writeRaw("NaN");
 
     if (value < 0.0) {
       writeRaw('-');
       value = -value;
     }
 
-    if (isinf(value)) return writeRaw("Infinity", 8);
+    if (isinf(value)) return writeRaw("Infinity");
 
     FloatParts<TFloat> parts(value);
 
@@ -89,7 +89,7 @@ class JsonWriter {
     if (parts.decimalPlaces) writeDecimals(parts.decimal, parts.decimalPlaces);
 
     if (parts.exponent < 0) {
-      writeRaw("e-", 2);
+      writeRaw("e-");
       writeInteger(-parts.exponent);
     }
 
@@ -112,7 +112,7 @@ class JsonWriter {
     } while (value);
 
     // and dump it in the right order
-    writeRaw(begin, static_cast<size_t>(end - begin));
+    writeRaw(begin, end);
   }
 
   void writeDecimals(uint32_t value, int8_t width) {
@@ -129,14 +129,19 @@ class JsonWriter {
     *--begin = '.';
 
     // and dump it in the right order
-    writeRaw(begin, static_cast<size_t>(end - begin));
+    writeRaw(begin, end);
   }
 
   void writeRaw(const char *s) {
-    writeRaw(s, strlen(s));
+    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), strlen(s));
   }
-  void writeRaw(const char *s, size_t n) {
-    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), n);
+  void writeRaw(const char *begin, const char *end) {
+    _length += _sink.write(reinterpret_cast<const uint8_t *>(begin),
+                           static_cast<size_t>(end - begin));
+  }
+  template <size_t N>
+  void writeRaw(const char (&s)[N]) {
+    _length += _sink.write(reinterpret_cast<const uint8_t *>(s), N - 1);
   }
   void writeRaw(char c) {
     _length += _sink.write(static_cast<uint8_t>(c));
