@@ -7,7 +7,7 @@
 namespace ArduinoJson {
 namespace Internals {
 
-class DummyPrint {
+class DummyWriter {
  public:
   size_t write(uint8_t) {
     return 1;

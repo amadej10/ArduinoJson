@@ -13,9 +13,9 @@
 namespace ArduinoJson {
 namespace Internals {
 
-class StreamPrintAdapter {
+class StreamWriter {
  public:
-  explicit StreamPrintAdapter(std::ostream& os) : _os(os) {}
+  explicit StreamWriter(std::ostream& os) : _os(os) {}
 
   size_t write(uint8_t c) {
     _os << c;
@@ -23,13 +23,14 @@ class StreamPrintAdapter {
   }
 
   size_t write(const uint8_t* s, size_t n) {
-    _os.write(reinterpret_cast<const char*>(s), static_cast<std::streamsize>(n));
+    _os.write(reinterpret_cast<const char*>(s),
+              static_cast<std::streamsize>(n));
     return n;
   }
 
  private:
   // cannot be assigned
-  StreamPrintAdapter& operator=(const StreamPrintAdapter&);
+  StreamWriter& operator=(const StreamWriter&);
 
   std::ostream& _os;
 };

@@ -7,13 +7,13 @@
 
 using namespace ArduinoJson::Internals;
 
-template <typename StringBuilder>
-static size_t print(StringBuilder& sb, const char* s) {
+template <typename StringWriter>
+static size_t print(StringWriter& sb, const char* s) {
   return sb.write(reinterpret_cast<const uint8_t*>(s), strlen(s));
 }
 
-template <typename StringBuilder, typename String>
-void common_tests(StringBuilder& sb, const String& output) {
+template <typename StringWriter, typename String>
+void common_tests(StringWriter& sb, const String& output) {
   SECTION("InitialState") {
     REQUIRE(std::string("") == output);
   }
@@ -35,9 +35,9 @@ void common_tests(StringBuilder& sb, const String& output) {
   }
 }
 
-TEST_CASE("StaticStringBuilder") {
+TEST_CASE("StaticStringWriter") {
   char output[20];
-  StaticStringBuilder sb(output, sizeof(output));
+  StaticStringWriter sb(output, sizeof(output));
 
   common_tests(sb, static_cast<const char*>(output));
 
@@ -48,8 +48,8 @@ TEST_CASE("StaticStringBuilder") {
   }
 }
 
-TEST_CASE("DynamicStringBuilder") {
+TEST_CASE("DynamicStringWriter") {
   std::string output;
-  DynamicStringBuilder<std::string> sb(output);
+  DynamicStringWriter<std::string> sb(output);
   common_tests(sb, output);
 }

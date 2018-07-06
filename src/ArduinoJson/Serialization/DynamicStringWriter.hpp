@@ -11,9 +11,9 @@ namespace Internals {
 
 // A Print implementation that allows to write in a String
 template <typename TString>
-class DynamicStringBuilder {
+class DynamicStringWriter {
  public:
-  DynamicStringBuilder(TString &str) : _str(str) {}
+  DynamicStringWriter(TString &str) : _str(str) {}
 
   size_t write(uint8_t c) {
     StringTraits<TString>::append(_str, char(c));
@@ -26,7 +26,7 @@ class DynamicStringBuilder {
   }
 
  private:
-  DynamicStringBuilder &operator=(const DynamicStringBuilder &);
+  DynamicStringWriter &operator=(const DynamicStringWriter &);
 
   TString &_str;
 };
