@@ -73,7 +73,8 @@ inline Internals::RawJsonString<T> RawJson(T str) {
 
 template <typename TChar>
 inline Internals::RawJsonString<TChar*> RawJson(TChar* p) {
-  return Internals::RawJsonString<TChar*>(p, strlen(p));
+  return Internals::RawJsonString<TChar*>(
+      p, Internals::StringTraits<TChar*>::size(p));
 }
 
 template <typename TChar>
