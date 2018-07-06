@@ -102,34 +102,34 @@ class JsonWriter {
   template <typename UInt>
   void writeInteger(UInt value) {
     char buffer[22];
-    char *end = buffer + sizeof(buffer) - 1;
-    char *ptr = end;
+    char *end = buffer + sizeof(buffer);
+    char *begin = end;
 
-    *ptr = 0;
+    // write the string in reverse order
     do {
-      *--ptr = char(value % 10 + '0');
+      *--begin = char(value % 10 + '0');
       value = UInt(value / 10);
     } while (value);
 
-    writeRaw(ptr);
+    // and dump it in the right order
+    writeRaw(begin, end - begin);
   }
 
   void writeDecimals(uint32_t value, int8_t width) {
-    // buffer should be big enough for all digits, the dot and the null
-    // terminator
+    // buffer should be big enough for all digits and the dot
     char buffer[16];
-    char *ptr = buffer + sizeof(buffer) - 1;
+    char *end = buffer + sizeof(buffer);
+    char *begin = end;
 
     // write the string in reverse order
-    *ptr = 0;
     while (width--) {
-      *--ptr = char(value % 10 + '0');
+      *--begin = char(value % 10 + '0');
       value /= 10;
     }
-    *--ptr = '.';
+    *--begin = '.';
 
     // and dump it in the right order
-    writeRaw(ptr);
+    writeRaw(begin, end - begin);
   }
 
   void writeRaw(const char *s) {
