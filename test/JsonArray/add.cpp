@@ -108,7 +108,7 @@ TEST_CASE("JsonArray::add()") {
 
   SECTION("should duplicate RawJson(char*)") {
     _array.add(RawJson(const_cast<char*>("{}")));
-    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 3;
+    const size_t expectedSize = JSON_ARRAY_SIZE(1) + 2;
     REQUIRE(expectedSize == doc.memoryUsage());
   }
 }
