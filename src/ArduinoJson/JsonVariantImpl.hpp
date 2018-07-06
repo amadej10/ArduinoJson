@@ -84,9 +84,6 @@ inline T JsonVariant::variantAsInteger() const {
 
 inline const char *JsonVariant::variantAsString() const {
   using namespace Internals;
-  if (_type == JSON_UNPARSED && _content.asString &&
-      !strcmp("null", _content.asString))
-    return NULL;
   if (_type == JSON_STRING || _type == JSON_UNPARSED) return _content.asString;
   return NULL;
 }

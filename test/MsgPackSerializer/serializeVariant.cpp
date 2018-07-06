@@ -126,4 +126,8 @@ TEST_CASE("serialize MsgPack value") {
     std::string shortest(65536, '?');
     check(shortest.c_str(), std::string("\xDB\x00\x01\x00\x00", 5) + shortest);
   }
+
+  SECTION("RawJson") {
+    check(RawJson("\xDA\xFF\xFF"), "\xDA\xFF\xFF");
+  }
 }
