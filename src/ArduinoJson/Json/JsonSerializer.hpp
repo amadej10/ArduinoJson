@@ -58,8 +58,9 @@ class JsonSerializer {
     _writer.writeString(value);
   }
 
-  void acceptRawJson(const char *data, size_t) {
-    _writer.writeRaw(data);
+  void acceptRawJson(const char *data, size_t n) {
+    // TODO
+    for (size_t i = 0; i < n; i++) _writer.writeRaw(data[i]);
   }
 
   void acceptNegativeInteger(JsonUInt value) {

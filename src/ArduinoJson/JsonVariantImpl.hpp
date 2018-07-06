@@ -76,7 +76,7 @@ inline T JsonVariant::variantAsInteger() const {
     case JSON_NEGATIVE_INTEGER:
       return T(~_content.asInteger + 1);
     case JSON_STRING:
-      return parseInteger<T>(_content.asString.data);
+      return parseInteger<T>(_content.asString);
     default:
       return T(_content.asFloat);
   }
@@ -84,9 +84,7 @@ inline T JsonVariant::variantAsInteger() const {
 
 inline const char *JsonVariant::variantAsString() const {
   using namespace Internals;
-  if (_type == JSON_STRING || _type == JSON_UNPARSED)
-    return _content.asString.data;
-  return NULL;
+  return _type == JSON_STRING ? _content.asString : NULL;
 }
 
 template <typename T>
@@ -94,6 +92,7 @@ inline T JsonVariant::variantAsFloat() const {
   using namespace Internals;
   switch (_type) {
     case JSON_UNDEFINED:
+    case JSON_UNPARSED:
       return 0;
     case JSON_POSITIVE_INTEGER:
     case JSON_BOOLEAN:
@@ -101,8 +100,7 @@ inline T JsonVariant::variantAsFloat() const {
     case JSON_NEGATIVE_INTEGER:
       return -static_cast<T>(_content.asInteger);
     case JSON_STRING:
-    case JSON_UNPARSED:
-      return parseFloat<T>(_content.asString.data);
+      return parseFloat<T>(_content.asString);
     default:
       return static_cast<T>(_content.asFloat);
   }

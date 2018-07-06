@@ -95,14 +95,14 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
   JsonVariant(const TChar *value,
               typename Internals::enable_if<sizeof(TChar) == 1>::type * = 0) {
     _type = Internals::JSON_STRING;
-    _content.asString.data = reinterpret_cast<const char *>(value);
+    _content.asString = reinterpret_cast<const char *>(value);
   }
 
   // Create a JsonVariant containing an unparsed string
   JsonVariant(Internals::RawJsonString<const char *> value) {
     _type = Internals::JSON_UNPARSED;
-    _content.asString.data = value.data();
-    _content.asString.size = value.size();
+    _content.asRaw.data = value.data();
+    _content.asRaw.size = value.size();
   }
 
   JsonVariant(JsonArray array);
@@ -274,11 +274,10 @@ class JsonVariant : public Internals::JsonVariantBase<JsonVariant> {
         return visitor.acceptObject(_content.asObject);
 
       case JSON_STRING:
-        return visitor.acceptString(_content.asString.data);
+        return visitor.acceptString(_content.asString);
 
       case JSON_UNPARSED:
-        return visitor.acceptRawJson(_content.asString.data,
-                                     _content.asString.size);
+        return visitor.acceptRawJson(_content.asRaw.data, _content.asRaw.size);
 
       case JSON_NEGATIVE_INTEGER:
         return visitor.acceptNegativeInteger(_content.asInteger);

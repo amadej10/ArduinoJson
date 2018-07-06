@@ -20,10 +20,11 @@ union JsonVariantContent {
   JsonUInt asInteger;        // used for bool, char, short, int and longs
   JsonArrayData* asArray;    // asArray cannot be null
   JsonObjectData* asObject;  // asObject cannot be null
+  const char* asString;      // asString can be null
   struct {
-    const char* data;  // asString can be null
+    const char* data;
     size_t size;
-  } asString;
+  } asRaw;
 };
 }  // namespace Internals
 }  // namespace ArduinoJson
